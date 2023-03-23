@@ -1,9 +1,4 @@
-
-Enviar datos a hoja correspondiente.
-
-
-AAL
-Quiero que esta macro de google sheets cuando introduzca los datos en el campo, al ejecutarla, los datos vayan a la hoja del bpm correspondiente, ahora mismo se abre la hoja pero no se escriben los datos function ObtenerCancion() {
+ function ObtenerCancion() {
   // Obtener la hoja activa
   var ws = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
