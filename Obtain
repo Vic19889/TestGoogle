@@ -1,0 +1,102 @@
+
+Enviar datos a hoja correspondiente.
+
+
+AAL
+Quiero que esta macro de google sheets cuando introduzca los datos en el campo, al ejecutarla, los datos vayan a la hoja del bpm correspondiente, ahora mismo se abre la hoja pero no se escriben los datos function ObtenerCancion() {
+  // Obtener la hoja activa
+  var ws = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  // Obtener los valores de la entrada
+  var cancion = ws.getRange("A7").getValue();
+  var bpm = ws.getRange("B7").getValue();
+  var ritmo = ws.getRange("C7").getValue();
+  var vocal = ws.getRange("D7").getValue();
+  var inspri = ws.getRange("E7").getValue();
+  var numero = ws.getRange("F7").getValue();
+  var duracion = Utilities.formatDate(ws.getRange("G7").getValue(), Session.getScriptTimeZone(), "H:MM");
+  var musico = ws.getRange("H7").getValue();
+  var album = ws.getRange("I7").getValue();
+
+  // Verificar el rango de BPM y crear una nueva hoja si es necesario
+  var newSheetName;
+  if (bpm < 120) {
+    newSheetName = "-120";
+  } else if (bpm >= 120 && bpm < 130) {
+    newSheetName = "120";
+  } else if (bpm >= 130 && bpm < 140) {
+    newSheetName = "130";
+  } else if (bpm >= 140 && bpm < 150) {
+    newSheetName = "140";
+  } else if (bpm >= 150 && bpm < 160) {
+    newSheetName = "150";
+  } else if (bpm >= 160 && bpm < 170) {
+    newSheetName = "160";
+  } else {
+    newSheetName = "+170";
+  }
+
+  var newSheet = null;
+  try {
+    newSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(newSheetName);
+  } catch (e) {}
+
+  if (newSheet == null) {
+    newSheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet();
+    newSheet.setName(newSheetName);
+
+    // Agregar encabezados
+    newSheet.getRange("A1:I1").setValues([["CANCION", "BPM", "RITMO", "VOCAL", "INS. PRI", "Nº", "DURACION", "MUSICO PRIN.", "ALBUM"]]);
+    newSheet.getRange("A1:I1").setBackgroundRGB(155, 194, 230);
+    newSheet.getRange("A1:I1").setFontWeight("bold");
+
+    // Ajustar formato de la columna G para duración
+    newSheet.getRange("G:G").setNumberFormat("@");
+  }
+
+  function agregarFilaDeDatos(cancion, bpm, ritmo, vocal, inspri, numero, duracion, musico, album) {
+  var newSheet = SpreadsheetApp.getActive().getSheetByName("nombreDeLaHoja");
+  var lastRow = newSheet.getRange("A:A").getValues().filter(String).length + 1;
+
+  newSheet.getRange(lastRow, 1).setValue(cancion);
+  newSheet.getRange(lastRow, 2).setValue(bpm);
+  newSheet.getRange(lastRow, 3).setNumberFormat("@"); // Formato de celda texto
+  newSheet.getRange(lastRow, 3).setValue(ritmo);
+  newSheet.getRange(lastRow, 4).setValue(vocal);
+  newSheet.getRange(lastRow, 5).setValue(inspri);
+  newSheet.getRange(lastRow, 6).setValue(numero);
+  newSheet.getRange(lastRow, 7).setValue(duracion);
+  newSheet.getRange(lastRow, 8).setValue(musico);
+  newSheet.getRange(lastRow, 9).setValue(album);
+
+  newSheet.getRange(lastRow, 1, 1, 9).setBackgroundRGB(252, 228, 214).setFontWeight("bold");
+  
+  // Ajustar el ancho de las columnas A a I al tamaño del contenido y centrar el contenido
+  newSheet.autoResizeColumns(1, 9).setHorizontalAlignment("center");
+  
+  // Determinar el color de las celdas
+  var color = "";
+  switch (newSheet.getRange("J7").getValue()) {
+  case "LIVE":
+    color = "#70AD47";
+    newSheet.getRange("A" + lastRow).setBackground(color);
+    break;
+  case "HOTJAZZ":
+    color = "#FFC000";
+    newSheet.getRange("B" + lastRow + ":I" + lastRow).setBackground(color);
+    break;
+  case "JUMPBLUES":
+    color = "#DDF3F7";
+    newSheet.getRange("B" + lastRow + ":I" + lastRow).setBackground(color);
+    break;
+  case "BEBOP":
+    color = "#FFE699";
+    newSheet.getRange("B" + lastRow + ":I" + lastRow).setBackground(color);
+    break;
+  case "NINGUNA":
+    color = "#FCE4D6";
+    newSheet.getRange("B" + lastRow + ":I" + lastRow).setBackground(color);
+    break;
+  }
+  }
+}
